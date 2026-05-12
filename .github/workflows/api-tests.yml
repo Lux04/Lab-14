@@ -1,0 +1,23 @@
+name: API tests
+
+on: [push, pull_request]
+
+jobs:
+  newman:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install -g newman newman-reporter-htmlextra
+
+      - run: |
+          mkdir -p reports
+          newman run postman/collection.json \
+            -e postman/env.ci.json \
+            --reporters cli,htmlextra
+
